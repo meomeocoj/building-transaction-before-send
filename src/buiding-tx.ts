@@ -15,10 +15,7 @@ const provider = new ethers.providers.JsonRpcProvider(
   "https://data-seed-prebsc-1-s1.binance.org:8545/"
 )
 
-const signer = new ethers.Wallet(
-  "715627cfadbba8a8c837443f2125a1a5e60bb4bbf62a189e1b4603065268893b",
-  provider
-)
+const signer = new ethers.Wallet("your-secret-key", provider)
 
 const main = async () => {
   const nonce = await signer.getTransactionCount()

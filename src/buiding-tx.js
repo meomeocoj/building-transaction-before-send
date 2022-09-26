@@ -22,7 +22,7 @@ const data = ifaceErc20.encodeFunctionData("transfer", [
     amountTransfer,
 ]);
 const provider = new ethers_1.ethers.providers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
-const signer = new ethers_1.ethers.Wallet("715627cfadbba8a8c837443f2125a1a5e60bb4bbf62a189e1b4603065268893b", provider);
+const signer = new ethers_1.ethers.Wallet("your-secret-key", provider);
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const nonce = yield signer.getTransactionCount();
     const contract = new ethers_1.ethers.Contract("0x3b979adf6Cd72Ae8ED420E7a9ba74865a7F64B82", erc20_json_1.default, signer);
