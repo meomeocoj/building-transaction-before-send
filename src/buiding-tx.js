@@ -22,11 +22,15 @@ const data = ifaceErc20.encodeFunctionData("transfer", [
     amountTransfer,
 ]);
 const provider = new ethers_1.ethers.providers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
-const signer = new ethers_1.ethers.Wallet("your-secret-key", provider);
+// Trên client sẽ thay thê = metamask get account
+const signer = new ethers_1.ethers.Wallet("715627cfadbba8a8c837443f2125a1a5e60bb4bbf62a189e1b4603065268893b", provider);
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const nonce = yield signer.getTransactionCount();
+    // Test contract ERC20
     const contract = new ethers_1.ethers.Contract("0x3b979adf6Cd72Ae8ED420E7a9ba74865a7F64B82", erc20_json_1.default, signer);
+    //   Tính toán gas Trước
     const estimateGas = yield contract.estimateGas.transfer("0xA75b901F1Ae13520810b17F08c1764C5949AC207", amountTransfer);
+    //   Data để kí trước phải đủ tất cả các trường
     const tx_data = {
         nonce,
         to: "0x3b979adf6Cd72Ae8ED420E7a9ba74865a7F64B82",
@@ -36,13 +40,17 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         data,
         chainId: yield signer.getChainId(),
     };
+    //   Confirm các trường trước khi gửi bước
     let tx_dataConfirm = signer.checkTransaction(tx_data);
+    //   Confirm log các trường
     console.log(tx_dataConfirm);
+    //   kí data
     let rawTransaction = yield signer.signTransaction(tx_data);
     console.log("===rawTrasnction: " + rawTransaction);
+    //   Hash lại transaction
     let tx_hash = ethers_1.ethers.utils.keccak256(rawTransaction);
     console.log("===tx_hash: " + tx_hash);
-    let tx_recepit = yield signer.sendTransaction(tx_dataConfirm);
+    let tx_recepit = yield contract.transfer("0xA75b901F1Ae13520810b17F08c1764C5949AC207", amountTransfer);
     console.log(tx_recepit);
 });
 main();
