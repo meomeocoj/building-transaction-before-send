@@ -1,5 +1,5 @@
 import { ethers } from "ethers"
-import { Interface } from "ethers/lib/utils"
+import { Interface, parseTransaction } from "ethers/lib/utils"
 import erc20Abi from "./abi/erc20.json"
 
 const ifaceErc20 = new Interface(erc20Abi)
@@ -47,19 +47,23 @@ const main = async () => {
     chainId: await signer.getChainId(),
   }
   //   Confirm các trường trước khi gửi bước
-  let tx_dataConfirm = signer.checkTransaction(tx_data)
-  //   Confirm log các trường
-  console.log(tx_dataConfirm)
+  let tx_dataConfirm = await ethers.utils.resolveProperties(tx_data)
+  console.log({ tx_dataConfirm })
   //   kí data
-  let rawTransaction = await signer.signTransaction(tx_data)
-  console.log("===rawTrasnction: " + rawTransaction)
+  let rawTransaction = await signer.signTransaction(tx_dataConfirm)
+  // console.log("===rawTrasnction: " + rawTransaction)
   //   Hash lại transaction
   let tx_hash = ethers.utils.keccak256(rawTransaction)
   console.log("===tx_hash: " + tx_hash)
+
+  const recoverTransaction = parseTransaction(rawTransaction)
+
+  // console.log({ recoverTransaction })
+
   let tx_recepit = await contract.transfer(
     "0xA75b901F1Ae13520810b17F08c1764C5949AC207",
     amountTransfer
   )
-  console.log(tx_recepit)
+  console.log({ tx_recepit })
 }
 main()

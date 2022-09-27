@@ -41,16 +41,17 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         chainId: yield signer.getChainId(),
     };
     //   Confirm các trường trước khi gửi bước
-    let tx_dataConfirm = signer.checkTransaction(tx_data);
-    //   Confirm log các trường
-    console.log(tx_dataConfirm);
+    let tx_dataConfirm = yield ethers_1.ethers.utils.resolveProperties(tx_data);
+    console.log({ tx_dataConfirm });
     //   kí data
-    let rawTransaction = yield signer.signTransaction(tx_data);
-    console.log("===rawTrasnction: " + rawTransaction);
+    let rawTransaction = yield signer.signTransaction(tx_dataConfirm);
+    // console.log("===rawTrasnction: " + rawTransaction)
     //   Hash lại transaction
     let tx_hash = ethers_1.ethers.utils.keccak256(rawTransaction);
     console.log("===tx_hash: " + tx_hash);
+    const recoverTransaction = (0, utils_1.parseTransaction)(rawTransaction);
+    // console.log({ recoverTransaction })
     let tx_recepit = yield contract.transfer("0xA75b901F1Ae13520810b17F08c1764C5949AC207", amountTransfer);
-    console.log(tx_recepit);
+    console.log({ tx_recepit });
 });
 main();
